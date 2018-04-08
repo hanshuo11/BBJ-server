@@ -8,6 +8,15 @@
         </el-steps>
         <div class="contentBox" v-show="active==1?true:false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="用户账号" prop="username">
+                    <el-input v-model="ruleForm.storeName"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码" prop="password">
+                    <el-input v-model="ruleForm.storeName"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" prop="surepassword">
+                    <el-input v-model="ruleForm.storeName"></el-input>
+                </el-form-item>
                 <el-form-item label="店铺名称" prop="storeName">
                     <el-input v-model="ruleForm.storeName"></el-input>
                 </el-form-item>
@@ -120,6 +129,15 @@ export default {
         contact: ""
       },
       rules: {
+        username: [
+          { required: true, message: "请设置用户名", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请设置密码", trigger: "blur" }
+        ],
+        surepassword: [
+          { required: true, message: "请确认密码", trigger: "blur" }
+        ],
         storeName: [
           { required: true, message: "请输入店铺名称", trigger: "blur" }
         ],
