@@ -5,9 +5,6 @@ function padding(s, len) {
     for (var i = 0; i < len; i++) { s = '0' + s; }
     return s;
 };
-window.$alert = function (e) {
-    alert(e);
-}
 
 window.postJSON = function (url, data) {
     return require('superagent')
@@ -26,6 +23,30 @@ window.fetchGet = function (url, data, api) {
             .get(url)
             .query(data)
     }
+}
+
+
+// cookie的设置
+window.getCookie = function (cookieName) {
+    var strCookie = document.cookie;
+
+    var arrCookie = strCookie.split("; ");
+    for (var i = 0; i < arrCookie.length; i++) {
+        var arr = arrCookie[i].split("=");
+        if (cookieName == arr[0]) {
+            return eval("(" + arr[1] + ")");
+        }
+    }
+    return "";
+}
+window.setCookie = function (cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+window.clearCookie = function clearCookie(name) {
+    setCookie(name, "", -1);
 }
 
 // export default {

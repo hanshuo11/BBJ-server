@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { requestLogin } from "../api/api";
+// import { requestLogin } from "../api/api";
 //import NProgress from 'nprogress'
 export default {
   data() {
@@ -84,26 +84,27 @@ export default {
         };
         if (valid) {
           //_this.$router.replace('/table');
-          this.logining = true;
-          //NProgress.start();
+          _this.logining = true;
+          // 表单验证成功发送至后端
           // this.$message.error("该用户不存在！");
-          console.log(loginParams);
-          requestLogin(loginParams).then(data => {
-            this.logining = false;
+          // console.log(loginParams);
+          postJSON("/index", {}).then(function(res) {
+            _this.logining = false;
+            console.log(res.text);
             //NProgress.done();
-            let { msg, code, user } = data;
-            console.log(data);
-            if (code !== 200) {
-              this.$message({
-                message: msg,
-                type: "error"
-              });
-            } else {
-              sessionStorage.setItem("user", JSON.stringify(user));
-              this.$router.push({
-                path: "/indent"
-              });
-            }
+            // let { msg, code, user } = data;
+            // console.log(data);
+            // if (code !== 200) {
+            //   this.$message({
+            //     message: msg,
+            //     type: "error"
+            //   });
+            // } else {
+            //   sessionStorage.setItem("user", JSON.stringify(user));
+            //   this.$router.push({
+            //     path: "/indent"
+            //   });
+            // }
           });
         } else {
           console.log("erro!");
