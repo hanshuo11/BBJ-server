@@ -9,13 +9,13 @@
         <div class="contentBox" v-show="active==1?true:false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="用户账号" prop="username">
-                    <el-input v-model="ruleForm.storeName"></el-input>
+                    <el-input v-model="ruleForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="用户密码" prop="password">
-                    <el-input v-model="ruleForm.storeName"></el-input>
+                    <el-input v-model="ruleForm.password"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="surepassword">
-                    <el-input v-model="ruleForm.storeName"></el-input>
+                    <el-input v-model="password"></el-input>
                 </el-form-item>
                 <el-form-item label="店铺名称" prop="storeName">
                     <el-input v-model="ruleForm.storeName"></el-input>
@@ -73,13 +73,18 @@
         </div>
         <div class="contentBox" v-show="active==3?true:false">
           <el-upload
+            ref="upload"
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://localhost:3000/store/uploadingImg"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
             multiple
+            :auto-upload="false"
+            :on-success="uploadSuccess"
+            list-type="picture-card"
             :limit="5"
+            :data="id"
             :on-exceed="handleExceed"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
@@ -100,20 +105,11 @@
 export default {
   data() {
     return {
-      fileList: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-        }
-      ],
-      active: 3,
+      fileList: [],
+      active: 1,
       ruleForm: {
+        username: "",
+        password: "",
         storeName: "",
         businessScope: "",
         openTime: "",
@@ -128,15 +124,14 @@ export default {
         idCardAddress: "",
         contact: ""
       },
+      password: "",
       rules: {
         username: [
           { required: true, message: "请设置用户名", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "请设置密码", trigger: "blur" }
-        ],
+        password: [{ required: true, message: "请设置密码", trigger: "blur" }],
         surepassword: [
-          { required: true, message: "请确认密码", trigger: "blur" }
+          { required: false, message: "请确认密码", trigger: "blur" }
         ],
         storeName: [
           { required: true, message: "请输入店铺名称", trigger: "blur" }
@@ -179,28 +174,31 @@ export default {
         contact: [
           { required: true, message: "请输入联系方式", trigger: "blur" }
         ]
+      },
+      // 上传表单返回的数据
+      result: "",
+      id: {
+        insertId: null
       }
     };
   },
   methods: {
-    register() {
-      console.log("注册");
-    },
     submitForm(formName) {
-      // console.log(this.$refs[formName])
+      let _this = this;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(this.formName);
-          this.active++;
+          _this.active++;
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
+    // 重置
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    // 返回上一层
     goback(formName) {
       // this.$refs[formName].resetFields();
       this.active--;
@@ -211,7 +209,24 @@ export default {
     },
     // 点击已上传的文件链接时的钩子, 可以通过 file.response 拿到服务端返回数据
     handlePreview(file) {
-      console.log(file);
+      console.log(file.response);
+    },
+    uploadSuccess(file) {
+      let _this = this;
+      if (file.newPath) {
+        _this.$message({
+          message: "店铺注册成功请等待系统审核，等待成功短息！",
+          type: "success"
+        });
+        _this.$router.push({
+          path: "/login"
+        });
+      } else {
+        _this.$message({
+          message: file.error,
+          type: "error"
+        });
+      }
     },
     // 上传限制提示
     handleExceed(files, fileList) {
@@ -226,14 +241,41 @@ export default {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     success() {
-      sessionStorage.setItem("user", JSON.stringify({}));
-      this.$router.push({
-        path: "/table"
+      let _this = this;
+      // 先提交表单信息
+      let data = { ..._this.ruleForm, ..._this.ruleForm2 };
+      postJSON("/store/storeRegister", data).then(function(res) {
+        // _this.logining = false;
+        let result = JSON.parse(res.text).affectedRows;
+        _this.id.insertId = JSON.parse(res.text).insertId;
+        if (result == 1) {
+          // 表单提交成功之后再上传图片
+          // console.log(_this.id.insertId);
+          _this.$refs.upload.submit();
+        }
+        // console.log(_this.insertId);
+        // if (result == 1) {
+        // sessionStorage.setItem("user", JSON.stringify({}));
+        // _this.$router.push({
+        //   path: "/table"
+        // });
+        // }
+        //NProgress.done();
+        // let { msg, code, user } = data;
+        // console.log(data);
+        // if (code !== 200) {
+        //   this.$message({
+        //     message: msg,
+        //     type: "error"
+        //   });
+        // } else {
+        //   sessionStorage.setItem("user", JSON.stringify(user));
+        //   this.$router.push({
+        //     path: "/indent"
+        //   });
+        // }
       });
     }
-  },
-  mounted: function() {
-    console.log(123);
   }
 };
 </script>

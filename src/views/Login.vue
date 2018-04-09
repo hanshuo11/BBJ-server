@@ -84,11 +84,11 @@ export default {
         };
         if (valid) {
           //_this.$router.replace('/table');
-          _this.logining = true;
+          // _this.logining = true;
           // 表单验证成功发送至后端
           // this.$message.error("该用户不存在！");
           // console.log(loginParams);
-          postJSON("/index", {}).then(function(res) {
+          postJSON("/user/index", {}).then(function(res) {
             _this.logining = false;
             console.log(res.text);
             //NProgress.done();
