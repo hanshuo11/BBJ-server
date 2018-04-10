@@ -11,6 +11,7 @@ import StoreSet from './views/nav2/StoreSet.vue'
 import GoodsEdit from './views/nav3/GoodsEdit.vue'
 import echarts from './views/charts/echarts.vue'
 
+// 基础路由
 let routes = [
     {
         path: '/login',
@@ -32,6 +33,11 @@ let routes = [
     },
     //{ path: '/main', component: Main },
     {
+        path: '*',
+        hidden: true,
+        redirect: { path: '/404' }
+    },
+    {
         path: '/',
         component: Home,
         name: '交易管理',
@@ -41,13 +47,14 @@ let routes = [
             // { path: '/main', component: Main, name: '已售订单' },
             { path: '/returnIndent', component: ReturnIndent, name: '退货订单' }
             // { path: '/form', component: Form, name: '评价' }
-            
+
         ]
     },
     {
         path: '/',
         component: Home,
         name: '店铺设置',
+        hidden: false,
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/addGoods', component: AddGoods, name: '添加商品' },
@@ -58,6 +65,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '',
+        hidden: false,
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
@@ -68,16 +76,18 @@ let routes = [
         path: '/',
         component: Home,
         name: '销售统计',
+        hidden: false,
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/echarts', component: echarts, name: '销售额统计' }
         ]
-    },
-    {
-        path: '*',
-        hidden: true,
-        redirect: { path: '/404' }
     }
 ];
+// user权限路由
+let userRoutes = [
 
-export default routes;
+];
+
+let data = { "routes": routes, "userRoutes": userRoutes }
+
+export default data;

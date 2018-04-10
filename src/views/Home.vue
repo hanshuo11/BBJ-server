@@ -5,14 +5,7 @@
 				{{collapsed?'':sysName}}
 			</el-col>
 			<el-col :span="4" class="userinfo">
-				<el-dropdown trigger="hover">
-					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
-					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item>我的消息</el-dropdown-item>
-						<el-dropdown-item>设置</el-dropdown-item>
-						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-					</el-dropdown-menu>
-				</el-dropdown>
+				 <span class="el-dropdown-link userinfo-inner" @click="logout">安全退出</span>
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="main">
@@ -55,8 +48,8 @@ export default {
     return {
       sysName: "BBJ",
       collapsed: false,
-      sysUserName: "",
-      sysUserAvatar: "",
+      sysUserName: "1",
+      sysUserAvatar: "1",
       form: {
         name: "",
         region: "",
@@ -133,6 +126,8 @@ export default {
       .userinfo-inner {
         cursor: pointer;
         color: #fff;
+        font-weight: 700;
+        font-size: 16px;
         img {
           width: 40px;
           height: 40px;

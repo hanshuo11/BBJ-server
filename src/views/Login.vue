@@ -38,11 +38,11 @@ export default {
       value: "",
       options: [
         {
-          value: 134,
+          value: "user",
           label: "商家版"
         },
         {
-          value: 123,
+          value: "admin",
           label: "企业版"
         }
       ],
@@ -83,28 +83,20 @@ export default {
           class: this.ruleForm2.selectV
         };
         if (valid) {
-          //_this.$router.replace('/table');
           // _this.logining = true;
-          // 表单验证成功发送至后端
           // this.$message.error("该用户不存在！");
-          // console.log(loginParams);
-          postJSON("/user/index", {}).then(function(res) {
-            _this.logining = false;
-            console.log(res.text);
-            //NProgress.done();
-            // let { msg, code, user } = data;
-            // console.log(data);
-            // if (code !== 200) {
-            //   this.$message({
-            //     message: msg,
-            //     type: "error"
-            //   });
-            // } else {
-            //   sessionStorage.setItem("user", JSON.stringify(user));
-            //   this.$router.push({
-            //     path: "/indent"
-            //   });
-            // }
+          // _this.logining = false;
+          // NProgress.done();
+          if (loginParams.class == "admin") {
+            sessionStorage.setItem("admin", "{}");
+            this.$router.replace({
+            path: "/indent"
+          });
+            return ;
+          }
+          sessionStorage.setItem("user", "{}");
+          this.$router.replace({
+            path: "/indent"
           });
         } else {
           console.log("erro!");
@@ -118,9 +110,6 @@ export default {
         path: "/register"
       });
     }
-  },
-  mounted: function() {
-    console.log(123);
   }
 };
 </script>

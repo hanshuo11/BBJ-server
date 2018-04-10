@@ -11,7 +11,7 @@ import axios from 'axios'
 import util from './common/js/util'
 //import NProgress from 'nprogress'
 //import 'nprogress/nprogress.css'
-import routes from './routes'
+import route from './routes'
 import Mock from './mock'
 Mock.bootstrap();
 import 'font-awesome/css/font-awesome.min.css'
@@ -24,6 +24,8 @@ Vue.use(VueRouter)
 
 //NProgress.configure({ showSpinner: false });
 
+let routes = route.routes;
+
 const router = new VueRouter({
   routes
 })
@@ -34,9 +36,13 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     // console.log(store.state.count)
     sessionStorage.removeItem('user');
+    sessionStorage.removeItem('admin');
   }
+
   let user = JSON.parse(sessionStorage.getItem('user'));
-  if (!user && (to.path != '/login' && to.path != '/register')) {
+  let admin = JSON.parse(sessionStorage.getItem('admin'));
+
+  if (!admin && !user && (to.path != '/login' && to.path != '/register')) {
     next({ path: '/login' })
   } else {
     next()
