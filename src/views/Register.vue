@@ -8,42 +8,42 @@
         </el-steps>
         <div class="contentBox" v-show="active==1?true:false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="用户账号" prop="username">
-                    <el-input v-model="ruleForm.username"></el-input>
+                <el-form-item label="用户账号" prop="store_userName">
+                    <el-input v-model="ruleForm.store_userName"></el-input>
                 </el-form-item>
-                <el-form-item label="用户密码" prop="password">
-                    <el-input v-model="ruleForm.password"></el-input>
+                <el-form-item label="用户密码" prop="store_password">
+                    <el-input v-model="ruleForm.store_password"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="surepassword">
-                    <el-input v-model="password"></el-input>
+                    <el-input v-model="store_password"></el-input>
                 </el-form-item>
-                <el-form-item label="店铺名称" prop="storeName">
-                    <el-input v-model="ruleForm.storeName"></el-input>
+                <el-form-item label="店铺名称" prop="store_name">
+                    <el-input v-model="ruleForm.store_name"></el-input>
                 </el-form-item>
-                <el-form-item label="经营范围" prop="businessScope">
-                    <el-select v-model="ruleForm.businessScope" placeholder="请选择活动区域">
+                <el-form-item label="经营范围" prop="store_businessScope">
+                    <el-select v-model="ruleForm.store_businessScope" placeholder="请选择活动区域">
                         <el-option label="区域一" value="shanghai"></el-option>
                         <el-option label="区域二" value="beijing"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开店时间" required>
                     <el-col :span="18">
-                        <el-form-item prop="openTime">
-                            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="ruleForm.openTime" style="width: 100%;"></el-date-picker>
+                        <el-form-item prop="store_openTime">
+                            <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd" v-model="ruleForm.store_openTime" style="width: 100%;"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="店铺地址" prop="address">
-                    <el-input type="textarea" v-model="ruleForm.address"></el-input>                    
+                <el-form-item label="店铺地址" prop="store_address">
+                    <el-input type="textarea" v-model="ruleForm.store_address"></el-input>                    
                 </el-form-item>
-                <el-form-item label="店主姓名" prop="bossName">
-                    <el-input v-model="ruleForm.bossName"></el-input>
+                <el-form-item label="店主姓名" prop="store_bossName">
+                    <el-input v-model="ruleForm.store_bossName"></el-input>
                 </el-form-item>
-                <el-form-item label="联系方式" prop="phoneNum">
-                    <el-input type="textarea" v-model="ruleForm.phoneNum"></el-input>
+                <el-form-item label="联系方式" prop="store_phoneNum">
+                    <el-input type="textarea" v-model="ruleForm.store_phoneNum"></el-input>
                 </el-form-item>
-                <el-form-item label="支付宝账号" prop="moneyId">
-                    <el-input type="textarea" v-model="ruleForm.moneyId"></el-input>
+                <el-form-item label="支付宝账号" prop="store_moneyId">
+                    <el-input type="textarea" v-model="ruleForm.store_moneyId"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -53,17 +53,17 @@
         </div>
         <div class="contentBox" v-show="active==2?true:false">
           <el-form :model="ruleForm2" :rules="rules"  ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="身份证号" prop="idCardNum">
-                <el-input v-model="ruleForm2.idCardNum"></el-input>
+            <el-form-item label="身份证号" prop="store_idCardNum">
+                <el-input v-model="ruleForm2.store_idCardNum"></el-input>
             </el-form-item>
-            <el-form-item label="证件姓名" prop="idCardName">
-              <el-input v-model="ruleForm2.idCardName"></el-input>
+            <el-form-item label="证件姓名" prop="store_idCardName">
+              <el-input v-model="ruleForm2.store_idCardName"></el-input>
             </el-form-item>
-            <el-form-item label="居住地址" prop="idCardAddress">
-              <el-input v-model="ruleForm2.idCardAddress"></el-input>
+            <el-form-item label="居住地址" prop="store_idCardAddress">
+              <el-input v-model="ruleForm2.store_idCardAddress"></el-input>
             </el-form-item>
-            <el-form-item label="联系方式" prop="contact">
-              <el-input v-model="ruleForm2.contact"></el-input>
+            <el-form-item label="联系方式" prop="store_bossPhoneNum">
+              <el-input v-model="ruleForm2.store_bossPhoneNum"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button @click="goback('ruleForm')">上一步</el-button>
@@ -108,70 +108,70 @@ export default {
       fileList: [],
       active: 1,
       ruleForm: {
-        username: "",
-        password: "",
-        storeName: "",
-        businessScope: "",
-        openTime: "",
-        address: "",
-        bossName: "",
-        phoneNum: "",
-        moneyId: ""
+        store_userName: "",
+        store_password: "",
+        store_name: "",
+        store_businessScope: "",
+        store_openTime: "",
+        store_address: "",
+        store_bossName: "",
+        store_phoneNum: "",
+        store_moneyId: ""
       },
       ruleForm2: {
-        idCardNum: "",
-        idCardName: "",
-        idCardAddress: "",
-        contact: ""
+        store_idCardNum: "",
+        store_idCardName: "",
+        store_idCardAddress: "",
+        store_bossPhoneNum: ""
       },
-      password: "",
+      store_password: "",
       rules: {
-        username: [
+        store_userName: [
           { required: true, message: "请设置用户名", trigger: "blur" }
         ],
-        password: [{ required: true, message: "请设置密码", trigger: "blur" }],
+        store_password: [{ required: true, message: "请设置密码", trigger: "blur" }],
         surepassword: [
           { required: false, message: "请确认密码", trigger: "blur" }
         ],
-        storeName: [
+        store_name: [
           { required: true, message: "请输入店铺名称", trigger: "blur" }
         ],
-        businessScope: [
+        store_businessScope: [
           { required: true, message: "请选择经营范围", trigger: "change" }
         ],
-        openTime: [
+        store_openTime: [
           {
             required: true,
             message: "请选择日期",
             trigger: "change"
           }
         ],
-        address: [
+        store_address: [
           {
             required: true,
             message: "请填写店铺地址",
             trigger: "blur"
           }
         ],
-        bossName: [
+        store_bossName: [
           { required: true, message: "请填写店主姓名", trigger: "blur" }
         ],
-        phoneNum: [
+        store_phoneNum: [
           { required: true, message: "请填写联系方式", trigger: "blur" }
         ],
-        moneyId: [
+        store_moneyId: [
           { required: true, message: "请填写支付宝账号", trigger: "blur" }
         ],
-        idCardNum: [
+        store_idCardNum: [
           { required: true, message: "请输入身份证号", trigger: "blur" }
         ],
-        idCardName: [
+        store_idCardName: [
           { required: true, message: "请输入证件姓名", trigger: "blur" }
         ],
-        idCardAddress: [
+        store_idCardAddress: [
           { required: true, message: "请输入证件地址", trigger: "blur" }
         ],
-        contact: [
+        store_bossPhoneNum: [
           { required: true, message: "请输入联系方式", trigger: "blur" }
         ]
       },
@@ -200,7 +200,6 @@ export default {
     },
     // 返回上一层
     goback(formName) {
-      // this.$refs[formName].resetFields();
       this.active--;
     },
     // 文件列表移除文件时的钩子
@@ -213,14 +212,15 @@ export default {
     },
     uploadSuccess(file) {
       let _this = this;
+      // 上传图片成功后会提示并跳转路由
       if (file.newPath) {
         _this.$message({
-          message: "店铺注册成功请等待系统审核，等待成功短息！",
+          message: "店铺注册成功请等待系统审核，请等待短息通知！",
           type: "success"
         });
-        _this.$router.push({
-          path: "/login"
-        });
+        // _this.$router.push({
+        //   path: "/login"
+        // });
       } else {
         _this.$message({
           message: file.error,
@@ -245,35 +245,12 @@ export default {
       // 先提交表单信息
       let data = { ..._this.ruleForm, ..._this.ruleForm2 };
       postJSON("/store/storeRegister", data).then(function(res) {
-        // _this.logining = false;
         let result = JSON.parse(res.text).affectedRows;
-        _this.id.insertId = JSON.parse(res.text).insertId;
         if (result == 1) {
+          _this.id.insertId = JSON.parse(res.text).insertId;
           // 表单提交成功之后再上传图片
-          // console.log(_this.id.insertId);
           _this.$refs.upload.submit();
         }
-        // console.log(_this.insertId);
-        // if (result == 1) {
-        // sessionStorage.setItem("user", JSON.stringify({}));
-        // _this.$router.push({
-        //   path: "/table"
-        // });
-        // }
-        //NProgress.done();
-        // let { msg, code, user } = data;
-        // console.log(data);
-        // if (code !== 200) {
-        //   this.$message({
-        //     message: msg,
-        //     type: "error"
-        //   });
-        // } else {
-        //   sessionStorage.setItem("user", JSON.stringify(user));
-        //   this.$router.push({
-        //     path: "/indent"
-        //   });
-        // }
       });
     }
   }
