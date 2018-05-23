@@ -3,11 +3,15 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.name" placeholder="姓名"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button>查询</el-button>
+                <el-form-item>
+					<el-select v-model="value" @change="selectEvent" placeholder="请选择">
+						<el-option
+						v-for="item in options"
+						:key="item.value"
+						:label="item.label"
+						:value="item.value">
+						</el-option>
+					</el-select>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -17,19 +21,19 @@
 			<el-table :data="data" highlight-current-row v-loading="loading" style="width: 100%;">
 				<el-table-column type="index" width="60" >
 				</el-table-column>
-				<el-table-column prop="goodsId" label="订单id"  sortable>
+				<el-table-column prop="goodsId" label="申请id"  sortable>
 				</el-table-column>
-				<el-table-column prop="goodsNa" label="商品名称" sortable>
+				<el-table-column prop="goodsNa" label="店铺名称" sortable>
 				</el-table-column>
-				<el-table-column prop="goodsIn" label="商品规格" sortable>
+				<el-table-column prop="goodsIn" label="店主名称" sortable>
 				</el-table-column>
-				<el-table-column prop="buyTi" label="购买时间"  sortable>
+				<el-table-column prop="buyTi" label="申请时间"  sortable>
 				</el-table-column>
-				<el-table-column prop="money" label="支付金额" sortable>
+				<el-table-column prop="money" label="经营范围" sortable>
 				</el-table-column>
-				<el-table-column prop="buyWa" label="支付方式" sortable>
+				<el-table-column prop="buyWa" label="联系方式" sortable>
 				</el-table-column>
-				<el-table-column prop="addr" label="地址"  sortable>
+				<el-table-column prop="addr" label="店铺地址"  sortable>
 					 <template slot-scope="scope">
 						<el-popover trigger="hover" placement="top">
 						<p>电话: {{ scope.row.addr.phoneNu }}</p>
@@ -42,20 +46,20 @@
 				</el-table-column>
 				<el-table-column label="状态">
 					<template slot-scope="scope">
-            <div>
-              <el-button
-              v-show="!scope.row.state"
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row,'noSend')">未发货</el-button>
-            </div>
+                        <div>
+                            <el-button
+                            v-show="!scope.row.state"
+                            size="mini"
+                            type="primary"
+                            @click="handleEdit(scope.$index, scope.row,'noSend')">待审核</el-button>
+                        </div>
 						<div>
-              <el-button
-              v-show="scope.row.state"
-              size="mini"
-              type="success"
-              @click="handleEdit(scope.$index, scope.row)">已发货</el-button>
-            </div>
+                            <el-button
+                            v-show="scope.row.state"
+                            size="mini"
+                            type="success"
+                            @click="handleEdit(scope.$index, scope.row)">审核通过</el-button>
+                        </div>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -76,7 +80,6 @@
           </div>
 				</el-form>
 			</div>
-			
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false">取 消</el-button>
 				<el-button type="primary" @click="sendGoods">发货</el-button>
@@ -163,7 +166,22 @@ export default {
       rowInf: {
         index: 1111,
         data: {}
-      }
+      },
+      options: [
+        {
+          value: "选项0",
+          label: "全部"
+        },
+        {
+          value: "选项1",
+          label: "待审核"
+        },
+        {
+          value: "选项2",
+          label: "审核通过"
+        }
+      ],
+      value: ""
     };
   },
   methods: {

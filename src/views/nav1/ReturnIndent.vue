@@ -24,19 +24,19 @@
 			<el-table :data="data" highlight-current-row v-loading="loading" style="width: 100%;">
 				<el-table-column type="index" width="60" >
 				</el-table-column>
-				<el-table-column prop="goodsId" label="订单id" width="120" sortable>
+				<el-table-column prop="goodsId" label="订单id" sortable>
 				</el-table-column>
-				<el-table-column prop="goodsNa" label="商品名称" width="120" sortable>
+				<el-table-column prop="goodsNa" label="商品名称" sortable>
 				</el-table-column>
-				<el-table-column prop="goodsIn" label="商品规格" width="120"   sortable>
+				<el-table-column prop="goodsIn" label="商品规格" sortable>
 				</el-table-column>
-				<el-table-column prop="buyTi" label="购买时间" width="120" sortable>
+				<el-table-column prop="buyTi" label="购买时间" sortable>
 				</el-table-column>
-				<el-table-column prop="money" label="支付金额" width="100" sortable>
+				<el-table-column prop="money" label="支付金额" sortable>
 				</el-table-column>
-				<el-table-column prop="buyWa" label="支付方式" width="120" sortable>
+				<el-table-column prop="buyWa" label="支付方式" sortable>
 				</el-table-column>
-				<el-table-column prop="addr" label="地址" min-width="150" sortable>
+				<el-table-column prop="addr" label="地址" sortable>
 					 <template slot-scope="scope">
 						<el-popover trigger="hover" placement="top">
 						<p>电话: {{ scope.row.addr.phoneNu }}</p>
@@ -47,7 +47,9 @@
 						</el-popover>
 					</template>
 				</el-table-column>
-				<el-table-column label="状态" width="110">
+        <el-table-column prop="reason" label="退货理由" sortable>
+				</el-table-column>
+				<el-table-column label="状态" >
 					<template slot-scope="scope">
 						<el-button
 						v-show="!scope.row.state"
@@ -122,6 +124,7 @@ export default {
           buyTi: "2018-4-10",
           money: 100,
           buyWa: "货到付款",
+          reason:"不喜欢",
           state: false,
           addr: {
             name: "韩大鸽",
@@ -137,6 +140,7 @@ export default {
           money: 100,
           buyWa: "货到付款",
           state: true,
+          reason:"不想要了",
           addr: {
             name: "韩大鸽",
             phoneNu: "18800462896",
@@ -150,6 +154,7 @@ export default {
           buyTi: "2018-4-10",
           money: 100,
           buyWa: "货到付款",
+          reason:"买错了",
           state: true,
           addr: {
             name: "韩大鸽",

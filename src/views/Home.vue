@@ -11,7 +11,7 @@
 		<el-col :span="24" class="main">
 				<!--导航菜单-->
 				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router>
-					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+					<template v-for="(item,index) in $router.options.routes" v-if="showPro(item)">
 						<el-submenu :index="index+''" v-if="!item.leaf" :key="index">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
 							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
@@ -46,6 +46,7 @@
 export default {
   data() {
     return {
+      state: false,
       sysName: "BBJ",
       collapsed: false,
       sysUserName: "1",
@@ -62,7 +63,24 @@ export default {
       }
     };
   },
+  created: function() {
+    // 页面初始化判断用户类型
+    let admin = JSON.parse(sessionStorage.getItem("admin"));
+    if (admin) {
+      this.state = true;
+    }
+    console.log(this.state);
+  },
   methods: {
+    // 根据用户类型展示相关的导航选项
+    showPro(item) {
+      if (!this.state && item.state == "user") {
+        return true;
+      }
+      if (this.state && item.state == "admin") {
+        return true;
+      }
+    },
     onSubmit() {
       console.log("submit!");
     },
@@ -174,10 +192,10 @@ export default {
     position: absolute;
     top: 60px;
     bottom: 0px;
-	overflow: hidden;
-	.el-menu-vertical-demo{
-		width: 201px;
-	}
+    overflow: hidden;
+    .el-menu-vertical-demo {
+      width: 201px;
+    }
     .content-container {
       // background: #f1f2f7;
       flex: 1;

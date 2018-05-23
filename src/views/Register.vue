@@ -218,9 +218,9 @@ export default {
           message: "店铺注册成功请等待系统审核，请等待短息通知！",
           type: "success"
         });
-        // _this.$router.push({
-        //   path: "/login"
-        // });
+        _this.$router.push({
+          path: "/login"
+        });
       } else {
         _this.$message({
           message: file.error,
