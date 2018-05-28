@@ -1,16 +1,16 @@
 <template>
   <div class="background">
-    <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+    <el-form :model="userInf" :rules="rules2" ref="userInf" label-position="left" label-width="0px" class="demo-ruleForm login-container">
       <h3 class="title">BBJ后端登录系统</h3>
       <el-form-item prop="account">
-        <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
+        <el-input type="text" v-model="userInf.account" auto-complete="off" placeholder="账号"></el-input>
       </el-form-item>
       <el-form-item prop="checkPass">
-        <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+        <el-input type="password" v-model="userInf.checkPass" auto-complete="off" placeholder="密码"></el-input>
       </el-form-item>
       <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
       <el-form-item class="selectBox" prop="selectV">
-        <el-select class="select" v-model="ruleForm2.selectV" size="mini" placeholder="请选择登录类型">
+        <el-select class="select" v-model="userInf.selectV" size="mini" placeholder="请选择登录类型">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -29,9 +29,9 @@ export default {
   data() {
     return {
       logining: false,
-      ruleForm2: {
-        account: "admin",
-        checkPass: "123456",
+      userInf: {
+        account: "",
+        checkPass: "",
         selectV: ""
       },
       value: "",
@@ -75,27 +75,37 @@ export default {
   methods: {
     login(ev) {
       var _this = this;
-      this.$refs.ruleForm2.validate(valid => {
+      this.$refs.userInf.validate(valid => {
         var loginParams = {
-          username: this.ruleForm2.account,
-          password: this.ruleForm2.checkPass,
-          class: this.ruleForm2.selectV
+          username: this.userInf.account,
+          password: this.userInf.checkPass,
+          class: this.userInf.selectV
         };
         if (valid) {
-          _this.logining = true;
+          // _this.logining = true;
           // this.$message.error("该用户不存在！");
           // _this.logining = false;
           if (loginParams.class == "admin") {
             sessionStorage.setItem("admin", "{}");
             this.$router.replace({
-              path: "/indent"
+              path: "/storeCheck"
             });
             return;
           }
           if (loginParams.class == "user") {
-            sessionStorage.setItem("user", "{}");
-            this.$router.replace({
-              path: "/indent"
+            postJSON("/store/storeLogin", {
+              store_userName: loginParams.username,
+              store_password: loginParams.password
+            }).then(function(res) {
+              console.log(res);
+              if (res.body) {
+                sessionStorage.setItem("user", JSON.stringify(res.body[0]));
+                _this.$router.replace({
+                  path: "/indent"
+                });
+              } else {
+                _this.$message.error("用户不存在或审核未通过");
+              }
             });
           }
         } else {

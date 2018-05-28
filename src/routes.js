@@ -94,11 +94,11 @@ let routes = [
     {
         path: '/',
         component: require('./views/Home.vue'),
-        name: '销售统计',
+        name: '系统统计',
         state:"admin",
         iconCls: 'fa fa-bar-chart',
         children: [
-            { path: '/echarts', component: require('./views/charts/echarts.vue'), name: '销售额统计' }
+            { path: '/systemEcharts', component: require('./views/charts/echarts.vue'), name: '系统销售统计' }
         ]
     }
 ];

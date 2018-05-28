@@ -39,8 +39,8 @@
                 <el-form-item label="店主姓名" prop="store_bossName">
                     <el-input v-model="ruleForm.store_bossName"></el-input>
                 </el-form-item>
-                <el-form-item label="联系方式" prop="store_phoneNum">
-                    <el-input type="textarea" v-model="ruleForm.store_phoneNum"></el-input>
+                <el-form-item label="店铺邮箱" prop="store_email">
+                    <el-input type="textarea" v-model="ruleForm.store_email"></el-input>
                 </el-form-item>
                 <el-form-item label="支付宝账号" prop="store_moneyId">
                     <el-input type="textarea" v-model="ruleForm.store_moneyId"></el-input>
@@ -84,7 +84,7 @@
             :on-success="uploadSuccess"
             list-type="picture-card"
             :limit="5"
-            :data="id"
+            :data="uploadData"
             :on-exceed="handleExceed"
             :file-list="fileList">
             <el-button size="small" type="primary">点击上传</el-button>
@@ -115,7 +115,7 @@ export default {
         store_openTime: "",
         store_address: "",
         store_bossName: "",
-        store_phoneNum: "",
+        store_email: "",
         store_moneyId: ""
       },
       ruleForm2: {
@@ -156,7 +156,7 @@ export default {
         store_bossName: [
           { required: true, message: "请填写店主姓名", trigger: "blur" }
         ],
-        store_phoneNum: [
+        store_email: [
           { required: true, message: "请填写联系方式", trigger: "blur" }
         ],
         store_moneyId: [
@@ -177,7 +177,7 @@ export default {
       },
       // 上传表单返回的数据
       result: "",
-      id: {
+      uploadData: {
         insertId: null
       }
     };
@@ -247,7 +247,7 @@ export default {
       postJSON("/store/storeRegister", data).then(function(res) {
         let result = JSON.parse(res.text).affectedRows;
         if (result == 1) {
-          _this.id.insertId = JSON.parse(res.text).insertId;
+          _this.uploadData.insertId = JSON.parse(res.text).insertId;
           // 表单提交成功之后再上传图片
           _this.$refs.upload.submit();
         }

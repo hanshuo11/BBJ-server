@@ -3,89 +3,121 @@
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
-                <el-form-item>
-					<el-select v-model="value" @change="selectEvent" placeholder="请选择">
-						<el-option
-						v-for="item in options"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value">
-						</el-option>
-					</el-select>
+          <el-form-item>
+            <el-select v-model="value" @change="selectEvent" placeholder="请选择">
+              <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+              </el-option>
+            </el-select>
 				</el-form-item>
 			</el-form>
 		</el-col>
-
 		<!--列表-->
 		<template>
 			<el-table :data="data" highlight-current-row v-loading="loading" style="width: 100%;">
 				<el-table-column type="index" width="60" >
 				</el-table-column>
-				<el-table-column prop="goodsId" label="申请id"  sortable>
+				<el-table-column prop="store_id" label="申请id"  sortable>
 				</el-table-column>
-				<el-table-column prop="goodsNa" label="店铺名称" sortable>
+				<el-table-column prop="store_name" label="店铺名称" >
 				</el-table-column>
-				<el-table-column prop="goodsIn" label="店主名称" sortable>
+				<el-table-column prop="store_bossName" label="店主名称" >
 				</el-table-column>
-				<el-table-column prop="buyTi" label="申请时间"  sortable>
+				<el-table-column prop="store_resTime" label="申请时间"  sortable>
 				</el-table-column>
-				<el-table-column prop="money" label="经营范围" sortable>
+				<el-table-column prop="store_businessScope" label="经营范围" >
 				</el-table-column>
-				<el-table-column prop="buyWa" label="联系方式" sortable>
+				<el-table-column prop="store_email" label="店铺邮箱" >
 				</el-table-column>
-				<el-table-column prop="addr" label="店铺地址"  sortable>
+				<el-table-column label="店铺地址"  >
 					 <template slot-scope="scope">
 						<el-popover trigger="hover" placement="top">
-						<p>电话: {{ scope.row.addr.phoneNu }}</p>
-						<p>住址: {{ scope.row.addr.address}}</p>
-						<div slot="reference" class="name-wrapper">
-							<el-tag size="medium">{{ scope.row.addr.name }}收</el-tag>
-						</div>
+              <p>电话: {{ scope.row.store_bossPhoneNum }}</p>
+              <p>地址: {{ scope.row.store_address}}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">地址详情</el-tag>
+              </div>
 						</el-popover>
 					</template>
 				</el-table-column>
 				<el-table-column label="状态">
 					<template slot-scope="scope">
-                        <div>
-                            <el-button
-                            v-show="!scope.row.state"
-                            size="mini"
-                            type="primary"
-                            @click="handleEdit(scope.$index, scope.row,'noSend')">待审核</el-button>
-                        </div>
+            <div>
+                <el-button
+                v-show="scope.row.state==1?true:false"
+                size="mini"
+                type="primary"
+                @click="handleEdit(scope.$index, scope.row,'noChecked')">待审核</el-button>
+            </div>
+            <div>
+                <el-button
+                v-show="scope.row.state==2?true:false"
+                size="mini"
+                type="success"
+                @click="handleEdit(scope.$index, scope.row)">审核通过</el-button>
+            </div>
 						<div>
-                            <el-button
-                            v-show="scope.row.state"
-                            size="mini"
-                            type="success"
-                            @click="handleEdit(scope.$index, scope.row)">审核通过</el-button>
-                        </div>
+                <el-button
+                v-show="scope.row.state==3?true:false"
+                size="mini"
+                type="warning"
+                @click="handleEdit(scope.$index, scope.row)">审核未通过</el-button>
+            </div>
 					</template>
 				</el-table-column>
 			</el-table>
 		</template>
 
 		<!-- 弹出框 -->
-		<el-dialog title="订单操作" :visible.sync="dialogFormVisible">
+		<el-dialog title="审核操作" :visible.sync="dialogFormVisible">
 			<div class="dialogBox">
-				<el-form :model="courierForm">
-					<el-form-item label="快递单号" :label-width="formLabelWidth">
-						<el-input v-model="courierForm.courierC"></el-input>
-					</el-form-item>
-					<el-form-item label="快递公司" :label-width="formLabelWidth">
-							<el-input v-model="courierForm.courierN"></el-input>
-					</el-form-item>
-          <div class="hint">
-            如果店主上门配送快点单号不用填写，快递公司填写“店主配送”即可
-          </div>
+				<el-form label-width="100px" :disabled="true">
+            <span  v-for="(item, index) in rowInf.data" :key="index">
+                <img :src="item.store_imgUrl" class="image">
+            </span>
+            <el-form-item label="证件ID：">
+              <el-input v-model="dialogData.store_idCardNum" :style="inputWidth"></el-input>
+            </el-form-item>
+            <el-form-item label="证件姓名：">
+              <el-input v-model="dialogData.store_idCardName" :style="inputWidth"></el-input>
+            </el-form-item>
+            <el-form-item label="居住地址：">
+              <el-input v-model="dialogData.store_idCardAddress" :style="inputWidth"></el-input>
+            </el-form-item>
+            <el-form-item label="联系方式：">
+              <el-input v-model="dialogData.store_bossPhoneNum" :style="inputWidth"></el-input>
+            </el-form-item>
+            <el-form-item label="驳回理由：" v-if="regState==3?true:false">
+              <el-input type="textarea" v-model="refuseData.refuse_content" :style="inputWidth"></el-input>
+            </el-form-item>
 				</el-form>
 			</div>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" @click="sendGoods">发货</el-button>
+			<div slot="footer" class="dialog-footer" v-if="regState==1?true:false">
+				<el-button type="warning" @click="dialogFormVisible1=true">驳回申请</el-button>
+				<el-button type="success" @click="agreeReg">审核通过</el-button>
 			</div>
 		</el-dialog>
 
+    <el-dialog title="驳回理由" :visible.sync="dialogFormVisible1">
+			<div class="dialogBox">
+				<el-form>
+          <el-input
+          v-model="refuseContent"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入驳回理由"
+          >
+          </el-input>
+				</el-form>
+			</div>
+			<div slot="footer">
+        <el-button @click="dialogFormVisible1 = false">取消</el-button>
+				<el-button type="success" @click="refuseReg">确定</el-button>
+			</div>
+		</el-dialog>
 	</section>
 </template>
 <script>
@@ -98,143 +130,128 @@ export default {
         name: ""
       },
       loading: false,
-      data: [
-        {
-          goodsId: "213",
-          goodsNa: "苹果香蕉梨子",
-          goodsIn: "500g123123123123123123",
-          buyTi: "2018-4-10",
-          money: 100,
-          buyWa: "货到付款",
-          state: false,
-          addr: {
-            name: "韩大鸽",
-            phoneNu: "18800462896",
-            address: "北京回龙观昌平区龙跃苑二区23-5-502"
-          }
-        },
-        {
-          goodsId: "12312",
-          goodsNa: "苹果香蕉梨子",
-          goodsIn: "500g123123123123123123",
-          buyTi: "2018-4-20",
-          money: 11100,
-          buyWa: "货到付款",
-          state: false,
-          addr: {
-            name: "韩大鸽",
-            phoneNu: "18800462896",
-            address: "北京回龙观昌平区龙跃苑二区23-5-502"
-          }
-        },
-        {
-          goodsId: "222",
-          goodsNa: "苹果香蕉梨子",
-          goodsIn: "500g123123123123123123",
-          buyTi: "2018-4-10",
-          money: 1010,
-          buyWa: "货到付款",
-          state: true,
-          addr: {
-            name: "韩大鸽",
-            phoneNu: "18800462896",
-            address: "北京回龙观昌平区龙跃苑二区23-5-502"
-          }
-        },
-        {
-          goodsId: "333",
-          goodsNa: "苹果香蕉梨子",
-          goodsIn: "500g123123123123123123",
-          buyTi: "2018-4-1",
-          money: 400,
-          buyWa: "货到付款",
-          state: true,
-          addr: {
-            name: "韩大鸽",
-            phoneNu: "18800462896",
-            address: "北京回龙观昌平区龙跃苑二区23-5-502"
-          }
-        }
-      ],
+      data: [],
       dialogFormVisible: false,
-      // 快递信息表
-      courierForm: {
-        courierC: "",
-        courierN: ""
-      },
+      dialogFormVisible1: false,
       formLabelWidth: "120px",
       rowInf: {
-        index: 1111,
-        data: {}
+        index: null,
+        data: []
       },
       options: [
         {
-          value: "选项0",
+          value: "0",
           label: "全部"
         },
         {
-          value: "选项1",
+          value: "1",
           label: "待审核"
         },
         {
-          value: "选项2",
+          value: "2",
           label: "审核通过"
+        },
+        {
+          value: "3",
+          label: "审核未通过"
         }
       ],
-      value: ""
+      value: "",
+      refuseContent: "",
+      dialogData: {},
+      inputWidth: "width:400px;",
+      regState: null,
+      refuseData: {}
     };
   },
   methods: {
-    //性别显示转换
-    formatSex: function(row, column) {
-      return row.sex == 1 ? "男" : row.sex == 0 ? "女" : "未知";
+    selectEvent: function() {
+      var _this = this;
+      if(_this.value==0){
+        _this.getStoreList();
+        return;
+      }
+      // 获取店铺信息
+      postJSON("/store/selectListByState", { state: _this.value }).then(function(
+        res
+      ) {
+        _this.data = res.body;
+      });
     },
     //获取用户列表
-    // getUser: function() {
-    //   let para = {
-    //     name: this.filters.name
-    //   };
-    //   this.loading = true;
-    //   NProgress.start();
-    //   getUserList(para).then(res => {
-    //     this.users = res.data.users;
-    //     console.log(res.data);
-    //     this.loading = false;
-    //     //NProgress.done();
-    //   });
-    // },
+    getStoreList: function() {
+      var _this = this;
+      // 获取店铺信息
+      postJSON("/store/getStoreList", {}).then(function(res) {
+        _this.data = res.body;
+      });
+    },
     // 点击编辑
     handleEdit(index, row, flag) {
+      var _this = this;
+      _this.refuseData = {};
       // 标记index和row信息
       this.rowInf.index = index;
-      this.rowInf.data = row;
-      console.log(this.rowInf);
-      clearSendFrom(this.courierForm);
-      // 已发货的逻辑
-      if (flag) {
-        // 发送ajax请求数据
-        this.dialogFormVisible = true;
-      } else {
-        this.dialogFormVisible = true;
-      }
+      // 获取店铺下的证件照片
+      postJSON("/store/getStoreImg", { store_id: row.store_id }).then(function(
+        res
+      ) {
+        _this.rowInf.data = res.body;
+        postJSON("/store/getRefuseContent", { store_id: row.store_id }).then(
+          function(res) {
+            _this.refuseData = res.body[0];
+            console.log(_this.refuseData);
+          }
+        );
+      });
+      // 将对应的店铺的状态信息存入regState
+      _this.regState = this.data[index].state;
+      // 将对应的店铺信息存入dialogData
+      this.dialogData = this.data[index];
+      this.dialogFormVisible = true;
     },
-    sendGoods() {
+    agreeReg() {
       // 发送ajax请求提交发货信息
-      this.dialogFormVisible = false;
-      clearSendFrom(this.courierForm);
+      var _this = this;
+      postJSON("/store/agreeReg", { store_id: this.dialogData.store_id }).then(
+        function(res) {
+          _this.dialogFormVisible = false;
+          _this.dialogData = {};
+          _this.$message({
+            message: "店铺审核通过",
+            type: "success"
+          });
+          _this.getStoreList();
+        }
+      );
+    },
+    refuseReg() {
+      var _this = this;
+      var store_id = this.dialogData.store_id;
+      var refuseContent = this.refuseContent;
+      var store_email=this.dialogData.store_email;
+      postJSON("/store/refuseReg", {
+        store_id: store_id,
+        refuse_content: refuseContent,
+        store_email:store_email
+      }).then(function(res) {
+        _this.dialogFormVisible = false;
+        _this.dialogFormVisible1 = false;
+        _this.dialogData = {};
+        _this.refuseContent = "";
+        _this.$message({
+          message: "店铺审核已驳回",
+          type: "success"
+        });
+        _this.getStoreList();
+      });
+      // this.dialogFormVisible1=true;
     }
   },
   mounted() {
-    // this.getUser();
+    this.getStoreList();
   }
 };
-function clearSendFrom(from) {
-  let data = {
-    courierC: "",
-    courierN: ""
-  };
-  from = data;
-}
 </script>
 
 <style scoped>
@@ -246,5 +263,15 @@ function clearSendFrom(from) {
   text-align: center;
   color: #7e7b7b;
   font-size: 13px;
+}
+.dialog-footer {
+  text-align: center;
+}
+
+.image {
+  width: 150px;
+  margin-left: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 </style>
